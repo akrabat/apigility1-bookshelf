@@ -1,0 +1,12 @@
+.idea
+composer.phar
+build/
+clover.xml
+coveralls-upload.json
+phpunit.xml
+vendor/
+.vagrant/
+config/development.config.php
+data/bookshelf.db
+data/cache/*
+!data/cache/.gitkeep
