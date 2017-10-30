@@ -8,6 +8,11 @@ return [
             \Bookshelf\V1\Rest\Book\BookMapper::class => \Bookshelf\V1\Rest\Book\BookMapperFactory::class,
         ],
     ],
+    'hydrators' => [
+        'factories' => [
+            \Bookshelf\V1\Rest\Book\BookHydrator::class => \Bookshelf\V1\Rest\Book\BookHydratorFactory::class,
+        ],
+    ],
     'router' => [
         'routes' => [
             'bookshelf.rest.author' => [
@@ -128,7 +133,7 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'bookshelf.rest.book',
                 'route_identifier_name' => 'book_id',
-                'hydrator' => \Zend\Hydrator\ArraySerializable::class,
+                'hydrator' => \Bookshelf\V1\Rest\Book\BookHydrator::class,
             ],
             \Bookshelf\V1\Rest\Book\BookCollection::class => [
                 'entity_identifier_name' => 'id',

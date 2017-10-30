@@ -53,26 +53,6 @@ class BookMapper
         return $collection;
     }
 
-    public function fetchByAuthor1($authorId)
-    {
-        $sql = 'SELECT * FROM books WHERE author_id = ?';
-        $resultset = $this->adapter->query($sql, array($authorId));
-        $data = $resultset->toArray();
-
-        if (!$data) {
-            return false;
-        }
-
-        $books = [];
-        foreach ($data as $item) {
-            $entity = new BookEntity();
-            $entity->populate($item);
-            $books[] = $entity;
-        }
-
-        return $data;
-    }
-
     public function fetchOne($bookId)
     {
         $sql = 'SELECT * FROM books WHERE id = ?';

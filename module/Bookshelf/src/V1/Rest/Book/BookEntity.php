@@ -9,15 +9,33 @@ class BookEntity
     protected $isbn;
     protected $description;
 
+    protected $author;
+
+    public function getAuthorId()
+    {
+        return $this->author_id;
+    }
+
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
     public function getArrayCopy()
     {
-        return array(
+        return [
             'id'          => $this->id,
             'author_id'   => $this->author_id,
             'title'       => $this->title,
             'isbn'        => $this->isbn,
             'description' => $this->description,
-        );
+        ];
+
+        if ($this->books) {
+            $data['author'] = $this->author;
+        }
+
+        return $data;
     }
 
     public function populate(array $array)
@@ -27,5 +45,9 @@ class BookEntity
         $this->title       = $array['title'];
         $this->isbn        = $array['isbn'];
         $this->description = $array['description'];
+
+        if (array_key_exists('author', $array)) {
+            $this->author = $array['author'];
+        }
     }
 }
