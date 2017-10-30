@@ -54,7 +54,7 @@ class AuthorResource extends AbstractResourceListener
      */
     public function fetch($id)
     {
-        return $this->mapper->fetchOne($id);
+        return $this->mapper->fetchOne($id, true);
     }
 
     /**

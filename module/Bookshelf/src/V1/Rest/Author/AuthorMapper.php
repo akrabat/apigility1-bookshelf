@@ -1,25 +1,31 @@
 <?php
 namespace Bookshelf\V1\Rest\Author;
 
-use Zend\Db\Sql\Select;
+use Bookshelf\V1\Rest\Book\BookMapper;
 use Zend\Db\Adapter\AdapterInterface;
-use Zend\Paginator\Adapter\DbSelect;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\Select;
+use Zend\Paginator\Adapter\DbSelect;
 
 class AuthorMapper
 {
     protected $adapter;
+    protected $bookMapper;
 
-    public function __construct(AdapterInterface $adapter)
+    public function __construct(AdapterInterface $adapter, BookMapper $bookMapper)
     {
         $this->adapter = $adapter;
+        $this->bookMapper = $bookMapper;
     }
 
     public function fetchAll($filter = [])
     {
         $select = new Select('authors');
         if (isset($filter['name'])) {
-            $select->where(array('name LIKE ?' => '%'.$filter['name'].'%'));
+            $select->where(['name LIKE ?' => '%'.$filter['name'].'%']);
+        }
+        if (isset($filter['id'])) {
+            $select->where->equalTo('id', $filter['id']);
         }
 
         $resultset = new HydratingResultSet;
@@ -35,18 +41,20 @@ class AuthorMapper
         return $collection;
     }
 
-    public function fetchOne($authorsId)
+    public function fetchOne($authorId, $includeBooks = false)
     {
         $sql = 'SELECT * FROM authors WHERE id = ?';
-        $resultset = $this->adapter->query($sql, array($authorsId));
-        $data = $resultset->toArray();
+        $resultset = $this->adapter->query($sql, array($authorId));
+        $data = (array)$resultset->current();
 
         if (!$data) {
             return false;
         }
 
+        $data['books'] = $this->bookMapper->fetchByAuthor($data['id']);
+
         $entity = new AuthorEntity();
-        $entity->populate($data[0]);
+        $entity->populate($data);
 
         return $entity;
     }
